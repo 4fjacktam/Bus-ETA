@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
@@ -19,6 +19,9 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import Favorite from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 
+//cookies
+import Cookies from "universal-cookie";
+
 import BusStop from "./BusStop";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,17 +36,12 @@ export default function SimpleCard() {
   const [numStop, setNumStop] = useState(1);
   const [openSideBar, setOpenSideBar] = useState(false);
   const [isSpecialRoute, setIsSpecialRoute] = useState(false);
+  const [elRefs, setElRefs] = useState([]);
+  const [arrayDefaultStops, setArrayDefaultStops] = useState([]);
+  const cookies = new Cookies();
 
   const handleCheckBox = (event) => {
     setIsSpecialRoute(event.target.checked);
-  };
-
-  const handleIncrement = () => {
-    setNumStop(numStop + 1);
-  };
-
-  const handleDecrement = () => {
-    setNumStop(numStop - 1);
   };
 
   const handleOpenSideBar = () => {
@@ -54,14 +52,60 @@ export default function SimpleCard() {
     setOpenSideBar(false);
   };
 
+  const handleSave = () => {
+    const StationJSON = JSON.stringify(elRefs);
+    console.log(elRefs);
+    console.log(StationJSON);
+
+    const cookies = new Cookies();
+
+    cookies.set("station", StationJSON, {
+      path: "/",
+      maxAge: 2147483647
+    });
+  };
+
+  const handleAddStation = () => {
+    setArrayDefaultStops((state) => [
+      ...state,
+      {
+        current: { stop: "", numETA: 1 }
+      }
+    ]);
+  };
+
+  const handleRemoveAll = () => {
+    setArrayDefaultStops([]);
+  };
+
   const displayCounter = numStop > 0;
+  const arrLength = numStop;
+
+  useEffect(() => {
+    setElRefs((elRefs) =>
+      Array(arrayDefaultStops.length)
+        .fill()
+        .map((_, i) => elRefs[i] || createRef())
+    );
+  }, [
+    //numStop,
+    arrayDefaultStops
+  ]);
+
+  useEffect(() => {
+    console.log("elRefs", elRefs);
+  }, [elRefs]);
+
+  useEffect(() => {
+    const station = cookies.get("station");
+    if (station) {
+      setArrayDefaultStops(station);
+    }
+  }, []);
 
   return (
     <Grid>
-      <AppBar
-        color="secondary"
-        //position="sticky"
-      >
+      <AppBar color="secondary">
         <Toolbar>
           <IconButton
             edge="start"
@@ -84,43 +128,34 @@ export default function SimpleCard() {
         justify="flex-start"
         alignItems="baseline"
       >
-        {[...Array(numStop)].map((e, i) => {
-          return (
-            <Grid style={{ flex: 1 }}>
-              <BusStop isSpecialRoute={isSpecialRoute} />
-            </Grid>
-          );
-        })}
+        {arrayDefaultStops.map((e, i) => (
+          <Grid style={{ flex: 1 }}>
+            <BusStop
+              ref={elRefs[i]}
+              isSpecialRoute={isSpecialRoute}
+              defaultStop={e.current.selectStop}
+              defaultnumETA={e.current.numETA}
+            />
+          </Grid>
+        ))}
       </Grid>
-      <SwipeableDrawer open={openSideBar}>
+      <SwipeableDrawer open={openSideBar} onOpen={openSideBar}>
         <Button onClick={handleCloseSideBar}>Close</Button>
-        <ButtonGroup>
+        <Button onClick={handleSave}>Save</Button>
+        <Button onClick={handleAddStation}>add</Button>
+        <Button onClick={handleRemoveAll}>remove all</Button>
+        {/* <ButtonGroup>
           <Button onClick={handleIncrement}>+</Button>
           {displayCounter && <Button disabled>{numStop}</Button>}
           {displayCounter && <Button onClick={handleDecrement}>-</Button>}
-        </ButtonGroup>
+        </ButtonGroup> */}
 
         <FormGroup column>
           <FormControlLabel
             control={
-              <Checkbox
-                checked={isSpecialRoute}
-                onChange={handleCheckBox}
-                name="checkedA"
-              />
+              <Checkbox checked={isSpecialRoute} onChange={handleCheckBox} />
             }
             label="特別路線"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={true}
-                onChange={""}
-                name="checkedB"
-                color="primary"
-              />
-            }
-            label="Primary"
           />
         </FormGroup>
       </SwipeableDrawer>

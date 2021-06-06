@@ -3,10 +3,8 @@ import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
 
-// ISO 3166-1 alpha-2
-// ⚠️ No support for IE 11
+import Stations from "./station.json";
 
 const useStyles = makeStyles({
   option: {
@@ -20,6 +18,14 @@ const useStyles = makeStyles({
 
 export default function StopSelect(props) {
   const classes = useStyles();
+  const getAllStation = () => {
+    fetch("https://data.etabus.gov.hk/v1/transport/kmb/stop")
+      .then((res) => res.json())
+      .then((result) => {
+        return result.data;
+      });
+  };
+  const [isLoading, setIsLoading] = useState(true);
   const [station, setStation] = useState([]);
 
   useEffect(() => {
@@ -28,16 +34,28 @@ export default function StopSelect(props) {
       .then((result) => {
         console.log(result);
         setStation(result.data);
+        setIsLoading(false);
+        // console.log("station", station);
+        // console.log(
+        //   station.find((element) => element.stop === "8AFF8B43EC3E547F")
+        // );
       });
   }, []);
 
-  return (
+  useEffect(() => {
+    console.log("useeffect get station", getAllStation());
+  }, []);
+
+  return !isLoading ? (
     <Autocomplete
-      id="country-select-demo"
+      id="country-busstop"
       onChange={(event, value) => {
         //console.log(value.stop);
         if (value !== null) props.changeSelectStop(value.stop);
       }}
+      defaultValue={station.find(
+        (element) => element.stop === props.defaultStop
+      )}
       style={{ minWidth: 600 }}
       options={station}
       classes={{
@@ -62,7 +80,7 @@ export default function StopSelect(props) {
         />
       )}
     />
+  ) : (
+    "Loading"
   );
 }
-
-// From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js

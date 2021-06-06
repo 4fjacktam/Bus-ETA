@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle
+} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
@@ -31,23 +36,21 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BusStop(props) {
+const BusStop = (props, ref) => {
   const classes = useStyles();
   const [station, setStation] = useState([]);
   const [lastupdts, setLastupdts] = useState();
   const [lastrefreshts, setLastrefreshts] = useState();
-  const [selectStop, setSelectStop] = useState("9583BCF159B682BA");
-  const [numETA, setNumETA] = useState(1);
-  const [numStop, setNumStop] = useState(1);
+  const [selectStop, setSelectStop] = useState(
+    props.defaultStop ? props.defaultStop : "9583BCF159B682BA"
+  );
+  const [numETA, setNumETA] = useState(
+    props.defaultnumETA ? props.defaultnumETA : 1
+  );
   const url = "https://data.etabus.gov.hk/v1/transport/kmb/stop-eta/";
   const displayCounter = numETA > 0;
 
-  const getSelectStop = () => {
-    return selectStop;
-  };
   const changeSelectStop = (stop) => {
-    console.log("url" + url);
-    console.log("change");
     setSelectStop(stop);
   };
 
@@ -93,28 +96,18 @@ export default function BusStop(props) {
     return () => clearInterval(id);
   }, [selectStop, numETA, props.isSpecialRoute]);
 
+  useImperativeHandle(
+    ref,
+    () => ({
+      selectStop,
+      numETA
+    }),
+    [selectStop, numETA]
+  );
+
   return (
     <Grid>
       <Grid container style={{ padding: "5px" }}>
-        {/* <AppBar color="secondary" position="sticky">
-          <Toolbar>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="menu"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              Bus Arrival Time
-            </Typography>
-            <Button color="inherit">
-              Last Update Time:{" "}
-              {moment(lastupdts).format("YYYY/MM/DD HH:mm:ss")}
-            </Button>
-          </Toolbar>
-        </AppBar> */}
         <Grid
           container
           direction="row"
@@ -122,7 +115,10 @@ export default function BusStop(props) {
           alignItems="center"
         >
           <Grid align="center" style={{ flex: 2 }}>
-            <Autocomplete changeSelectStop={changeSelectStop} />
+            <Autocomplete
+              changeSelectStop={changeSelectStop}
+              defaultStop={props.defaultStop}
+            />
           </Grid>
         </Grid>
         <Grid style={{ flex: 1 }} alignItems="center" justifyContent="center">
@@ -209,4 +205,6 @@ export default function BusStop(props) {
       </Grid>
     </Grid>
   );
-}
+};
+
+export default forwardRef(BusStop);

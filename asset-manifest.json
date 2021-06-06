@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.js": "/Bus-ETA/static/js/main.da98b7b9.chunk.js",
-    "main.js.map": "/Bus-ETA/static/js/main.da98b7b9.chunk.js.map",
+    "main.js": "/Bus-ETA/static/js/main.7fa7e1a7.chunk.js",
+    "main.js.map": "/Bus-ETA/static/js/main.7fa7e1a7.chunk.js.map",
     "runtime-main.js": "/Bus-ETA/static/js/runtime-main.1918e168.js",
     "runtime-main.js.map": "/Bus-ETA/static/js/runtime-main.1918e168.js.map",
-    "static/js/2.80a2bf3c.chunk.js": "/Bus-ETA/static/js/2.80a2bf3c.chunk.js",
-    "static/js/2.80a2bf3c.chunk.js.map": "/Bus-ETA/static/js/2.80a2bf3c.chunk.js.map",
+    "static/js/2.d4a80bb1.chunk.js": "/Bus-ETA/static/js/2.d4a80bb1.chunk.js",
+    "static/js/2.d4a80bb1.chunk.js.map": "/Bus-ETA/static/js/2.d4a80bb1.chunk.js.map",
     "index.html": "/Bus-ETA/index.html",
-    "static/js/2.80a2bf3c.chunk.js.LICENSE.txt": "/Bus-ETA/static/js/2.80a2bf3c.chunk.js.LICENSE.txt"
+    "static/js/2.d4a80bb1.chunk.js.LICENSE.txt": "/Bus-ETA/static/js/2.d4a80bb1.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.1918e168.js",
-    "static/js/2.80a2bf3c.chunk.js",
-    "static/js/main.da98b7b9.chunk.js"
+    "static/js/2.d4a80bb1.chunk.js",
+    "static/js/main.7fa7e1a7.chunk.js"
   ]
 }

@@ -1,3 +1,3 @@
 # Bus-ETA 
 
-Bus (KMB-obly) ETA for any bus stop you choose. 
+Bus (KMB-only) ETA for any bus stop you choose. 

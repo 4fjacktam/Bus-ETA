@@ -17,6 +17,8 @@ import moment from "moment";
 
 import Autocomplete from "./Autocomplete";
 
+import kmbwater from "./img/kmb-water.png";
+
 const useStyles = makeStyles((theme) => ({
   // root: {
   //   minWidth: 275
@@ -194,7 +196,7 @@ const BusStop = (props, ref) => {
               </Typography>
             </Grid>
             <img
-              src="https://na.cx/i/cMDkd52.jpg"
+              src={kmbwater}
               className="photo"
               alt="KMB"
               width="100px"

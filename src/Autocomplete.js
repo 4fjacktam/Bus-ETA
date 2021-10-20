@@ -5,6 +5,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Stations from "./station.json";
+import { isMobile } from 'react-device-detect';
 
 const useStyles = makeStyles({
   option: {
@@ -56,7 +57,7 @@ export default function StopSelect(props) {
       defaultValue={station.find(
         (element) => element.stop === props.defaultStop
       )}
-      style={{ minWidth: 600 }}
+      
       options={station}
       classes={{
         option: classes.option
